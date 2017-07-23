@@ -42,7 +42,7 @@ def arg_parser():
     return parser.parse_args()
 
 
-def get_test_results(urls):
+def get_formated_test_results(urls):
     test_results = ["{} | {} | {}".format(
                     url, "Good. Server is responding 200." if is_server_respond_with_200(url) else "!SOMETHING WRONG!",
                     "Domain extended enough." if is_domain_extended_enough(url) else "!DOMAIN DOESN'T EXTENDED ENOUGH!")
@@ -54,5 +54,5 @@ if __name__ == '__main__':
     filepath = args.filepath
     urls = load_urls4check(filepath)
     if urls:
-        test_results = get_test_results(urls)
+        test_results = get_formated_test_results(urls)
         print(*test_results , sep="\n")
