@@ -24,16 +24,16 @@ def is_server_respond_with_200(url):
 
 def is_domain_extended_enough(domain_name):
     days_in_month = 30
-    q = whois.whois(domain_name)
-    if not q.expiration_date:
+    query = whois.whois(domain_name)
+    if not query.expiration_date:
         return None
-    if type(q.expiration_date) == list:
-        expiration_date = q.expiration_date[0]
+    if type(query.expiration_date) == list:
+        expiration_date = query.expiration_date[0]
     else:
-        expiration_date = q.expiration_date
+        expiration_date = query.expiration_date
     if (expiration_date - datetime.now()).days <= days_in_month:
-        return False, expiration_date
-    return True, expiration_date
+        return False
+    return True
 
 
 def arg_parser():
@@ -42,17 +42,18 @@ def arg_parser():
     return parser.parse_args()
 
 
-def get_formated_test_results(urls):
-    test_results = ["{} | {} | {}".format(
+def get_test_results(urls):
+    formatted_server_respond_domain_extend = ["{} | {} | {}".format(
                     url, "Good. Server is responding 200." if is_server_respond_with_200(url) else "!SOMETHING WRONG!",
                     "Domain extended enough." if is_domain_extended_enough(url) else "!DOMAIN DOESN'T EXTENDED ENOUGH!")
                     for url in urls]
-    return test_results
+    return formatted_server_respond_domain_extend
 
 if __name__ == '__main__':
     args = arg_parser()
-    filepath = args.filepath
-    urls = load_urls4check(filepath)
+    urls = load_urls4check(args.filepath)
     if urls:
-        test_results = get_formated_test_results(urls)
+        test_results = get_test_results(urls)
         print(*test_results , sep="\n")
+    else:
+        print("Файла не существует")
